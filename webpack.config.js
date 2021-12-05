@@ -9,57 +9,57 @@ module.exports = {
   output: {
     path: isDevMode ? process.env.DEV_MODE_PATH : path.resolve(__dirname, "."),
     filename: "main.js",
-    libraryTarget: "commonjs"
+    libraryTarget: "commonjs",
   },
   target: "node",
   mode: isDevMode ? "development" : "production",
-  ...(isDevMode ? {devtool: "eval"} : {}),
+  ...(isDevMode ? { devtool: "eval" } : {}),
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         loader: "ts-loader",
         options: {
-          transpileOnly: true
-        }
+          transpileOnly: true,
+        },
       },
       {
         test: /\.(svelte)$/,
         use: [
-          {loader: "babel-loader"},
+          { loader: "babel-loader" },
           {
             loader: "svelte-loader",
             options: {
-              preprocess: sveltePreprocess({})
-            }
-          }
-        ]
+              preprocess: sveltePreprocess({}),
+            },
+          },
+        ],
       },
       {
         test: /\.(svg|njk|html)$/,
-        type: "asset/source"
-      }
-    ]
+        type: "asset/source",
+      },
+    ],
   },
   plugins: [
     new CopyPlugin({
       patterns: [
-        {from: "./manifest.json", to: "."},
-        {from: "./src/main.css", to: "./styles.css"}
-      ]
-    })
+        { from: "./manifest.json", to: "." },
+        { from: "./src/main.css", to: "./styles.css" },
+      ],
+    }),
   ],
   resolve: {
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
       "~": path.resolve(__dirname, "src"),
-      src: path.resolve(__dirname, "src")
+      src: path.resolve(__dirname, "src"),
     },
     extensions: [".ts", ".tsx", ".js", ".svelte"],
-    mainFields: ["svelte", "browser", "module", "main"]
+    mainFields: ["svelte", "browser", "module", "main"],
   },
   externals: {
     electron: "commonjs2 electron",
-    obsidian: "commonjs2 obsidian"
-  }
+    obsidian: "commonjs2 obsidian",
+  },
 };

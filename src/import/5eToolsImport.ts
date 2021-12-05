@@ -1,192 +1,188 @@
 import type { HomebrewCreature } from "@types";
 
 export const ImportFrom5eTools = async (
-    ...files: File[]
+  ...files: File[]
 ): Promise<Map<string, HomebrewCreature>> => {
-    const importedMonsters: Map<string, HomebrewCreature> = new Map();
-    for (let file of files) {
-        try {
-            const monster = await buildMonsterFromFile(file);
-            importedMonsters.set(monster.name, monster);
-        } catch (e) {}
-    }
-    return importedMonsters;
+  const importedMonsters: Map<string, HomebrewCreature> = new Map();
+  for (let file of files) {
+    try {
+      const monster = await buildMonsterFromFile(file);
+      importedMonsters.set(monster.name, monster);
+    } catch (e) {}
+  }
+  return importedMonsters;
 };
 
 const abilityMap: { [key: string]: string } = {
-    str: "strength",
-    dex: "dexterity",
-    con: "constitution",
-    wis: "wisdom",
-    int: "intelligence",
-    cha: "charisma"
+  str: "strength",
+  dex: "dexterity",
+  con: "constitution",
+  wis: "wisdom",
+  int: "intelligence",
+  cha: "charisma",
 };
 
 async function buildMonsterFromFile(file: File): Promise<HomebrewCreature> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
 
-        reader.onload = async (event: any) => {
-            try {
-                const monster = JSON.parse(event.target.result);
+    reader.onload = async (event: any) => {
+      try {
+        const monster = JSON.parse(event.target.result);
 
-                const importedMonster: HomebrewCreature = {
-                    name: monster.name,
-                    source: `${
-                        SOURCE_JSON_TO_FULL[monster.source] ?? "5e.tools"
-                    }`,
-                    hp: monster.hp?.average ?? "",
-                    ac: (monster.ac ?? [])[0]?.ac ?? "",
-                    stats: [
-                        monster.str,
-                        monster.dex,
-                        monster.con,
-                        monster.int,
-                        monster.wis,
-                        monster.cha
-                    ],
-                    cr: monster.cr ? monster.cr.cr || monster.cr : "",
-                };
-
-                resolve(importedMonster);
-            } catch (e) {
-                reject();
-            }
+        const importedMonster: HomebrewCreature = {
+          name: monster.name,
+          source: `${SOURCE_JSON_TO_FULL[monster.source] ?? "5e.tools"}`,
+          hp: monster.hp?.average ?? "",
+          ac: (monster.ac ?? [])[0]?.ac ?? "",
+          stats: [
+            monster.str,
+            monster.dex,
+            monster.con,
+            monster.int,
+            monster.wis,
+            monster.cha,
+          ],
+          cr: monster.cr ? monster.cr.cr || monster.cr : "",
         };
 
-        reader.readAsText(file);
-    });
+        resolve(importedMonster);
+      } catch (e) {
+        reject();
+      }
+    };
+
+    reader.readAsText(file);
+  });
 }
 
 function parseImmune(immune: any[]): string {
-    if (!immune) return "";
-    const ret = [];
-    for (let imm of immune) {
-        if (typeof imm == "string") ret.push(imm);
-        if (imm.immune) {
-            ret.push(imm.immune.join(", ") + imm.note ? ` ${imm.note}` : "");
-        }
+  if (!immune) return "";
+  const ret = [];
+  for (let imm of immune) {
+    if (typeof imm == "string") ret.push(imm);
+    if (imm.immune) {
+      ret.push(imm.immune.join(", ") + imm.note ? ` ${imm.note}` : "");
     }
-    return ret.join(", ");
+  }
+  return ret.join(", ");
 }
 const spellMap: { [key: string]: string } = {
-    "0": "Cantrips (at will)",
-    "1": "1st level",
-    "2": "2nd level",
-    "3": "3rd level",
-    "4": "4th level",
-    "5": "5th level",
-    "6": "6th level",
-    "7": "7th level",
-    "8": "8th level",
-    "9": "9th level"
+  "0": "Cantrips (at will)",
+  "1": "1st level",
+  "2": "2nd level",
+  "3": "3rd level",
+  "4": "4th level",
+  "5": "5th level",
+  "6": "6th level",
+  "7": "7th level",
+  "8": "8th level",
+  "9": "9th level",
 };
 function getSpells(monster: any): any[] {
-    if (!monster.spellcasting || !monster.spellcasting.length) return [];
+  if (!monster.spellcasting || !monster.spellcasting.length) return [];
 
-    return [
-        monster.spellcasting[0].headerEntries.join("\n"),
-        ...Object.entries(monster.spellcasting[0].spells).map(
-            ([level, { slots, spells }]) => {
-                let name = `${spellMap[level]}`;
-                name += slots != undefined ? ` (${slots} slots)` : "";
+  return [
+    monster.spellcasting[0].headerEntries.join("\n"),
+    ...Object.entries(monster.spellcasting[0].spells).map(
+      ([level, { slots, spells }]) => {
+        let name = `${spellMap[level]}`;
+        name += slots != undefined ? ` (${slots} slots)` : "";
 
-                const sp = spells
-                    .join(", ")
-                    .replace(/\{@spell ([\s\S]+?)\}/g, `$1`);
-                return { [name]: sp };
-            }
-        )
-    ];
+        const sp = spells.join(", ").replace(/\{@spell ([\s\S]+?)\}/g, `$1`);
+        return { [name]: sp };
+      }
+    ),
+  ];
 }
 
 function getAlignmentString(alignment: any) {
-    if (!alignment) return null; // used in sidekicks
-    if (typeof alignment === "object") {
-        if (alignment.special != null) {
-            // use in MTF Sacred Statue
-            return alignment.special;
-        } else {
-            // e.g. `{alignment: ["N", "G"], chance: 50}` or `{alignment: ["N", "G"]}`
-            return `${(alignment.alignment ?? [])
-                .map((a: any) => getAlignmentString(a))
-                .join(" ")}${
-                alignment.chance ? ` (${alignment.chance}%)` : ""
-            }${alignment.note ? ` (${alignment.note})` : ""}`;
-        }
+  if (!alignment) return null; // used in sidekicks
+  if (typeof alignment === "object") {
+    if (alignment.special != null) {
+      // use in MTF Sacred Statue
+      return alignment.special;
     } else {
-        alignment = alignment.toUpperCase();
-        switch (alignment) {
-            case "L":
-                return "lawful";
-            case "N":
-                return "neutral";
-            case "NX":
-                return "neutral (law/chaos axis)";
-            case "NY":
-                return "neutral (good/evil axis)";
-            case "C":
-                return "chaotic";
-            case "G":
-                return "good";
-            case "E":
-                return "evil";
-            // "special" values
-            case "U":
-                return "unaligned";
-            case "A":
-                return "any alignment";
-        }
-        return alignment;
+      // e.g. `{alignment: ["N", "G"], chance: 50}` or `{alignment: ["N", "G"]}`
+      return `${(alignment.alignment ?? [])
+        .map((a: any) => getAlignmentString(a))
+        .join(" ")}${alignment.chance ? ` (${alignment.chance}%)` : ""}${
+        alignment.note ? ` (${alignment.note})` : ""
+      }`;
     }
+  } else {
+    alignment = alignment.toUpperCase();
+    switch (alignment) {
+      case "L":
+        return "lawful";
+      case "N":
+        return "neutral";
+      case "NX":
+        return "neutral (law/chaos axis)";
+      case "NY":
+        return "neutral (good/evil axis)";
+      case "C":
+        return "chaotic";
+      case "G":
+        return "good";
+      case "E":
+        return "evil";
+      // "special" values
+      case "U":
+        return "unaligned";
+      case "A":
+        return "any alignment";
+    }
+    return alignment;
+  }
 }
 
 function getSpeedString(it: any) {
-    if (it.speed == null) return "\u2014";
+  if (it.speed == null) return "\u2014";
 
-    function procSpeed(propName: string) {
-        function addSpeed(s: number) {
-            stack.push(
-                `${propName === "walk" ? "" : `${propName} `}${getVal(
-                    s
-                )} ft.${getCond(s)}`
-            );
-        }
-
-        if (it.speed[propName] || propName === "walk")
-            addSpeed(it.speed[propName] || 0);
-        if (it.speed.alternate && it.speed.alternate[propName])
-            it.speed.alternate[propName].forEach(addSpeed);
+  function procSpeed(propName: string) {
+    function addSpeed(s: number) {
+      stack.push(
+        `${propName === "walk" ? "" : `${propName} `}${getVal(s)} ft.${getCond(
+          s
+        )}`
+      );
     }
 
-    function getVal(speedProp: any) {
-        return speedProp.number != null ? speedProp.number : speedProp;
-    }
+    if (it.speed[propName] || propName === "walk")
+      addSpeed(it.speed[propName] || 0);
+    if (it.speed.alternate && it.speed.alternate[propName])
+      it.speed.alternate[propName].forEach(addSpeed);
+  }
 
-    function getCond(speedProp: any) {
-        return "";
-    }
+  function getVal(speedProp: any) {
+    return speedProp.number != null ? speedProp.number : speedProp;
+  }
 
-    const stack = [];
-    if (typeof it.speed === "object") {
-        let joiner = ", ";
-        procSpeed("walk");
-        procSpeed("burrow");
-        procSpeed("climb");
-        procSpeed("fly");
-        procSpeed("swim");
-        if (it.speed.choose) {
-            joiner = "; ";
-            stack.push(
-                `${it.speed.choose.from.sort().joinConjunct(", ", " or ")} ${
-                    it.speed.choose.amount
-                } ft.${it.speed.choose.note ? ` ${it.speed.choose.note}` : ""}`
-            );
-        }
-        return stack.join(joiner) + (it.speed.note ? ` ${it.speed.note}` : "");
-    } else {
-        return it.speed + (it.speed === "Varies" ? "" : " ft. ");
+  function getCond(speedProp: any) {
+    return "";
+  }
+
+  const stack = [];
+  if (typeof it.speed === "object") {
+    let joiner = ", ";
+    procSpeed("walk");
+    procSpeed("burrow");
+    procSpeed("climb");
+    procSpeed("fly");
+    procSpeed("swim");
+    if (it.speed.choose) {
+      joiner = "; ";
+      stack.push(
+        `${it.speed.choose.from.sort().joinConjunct(", ", " or ")} ${
+          it.speed.choose.amount
+        } ft.${it.speed.choose.note ? ` ${it.speed.choose.note}` : ""}`
+      );
     }
+    return stack.join(joiner) + (it.speed.note ? ` ${it.speed.note}` : "");
+  } else {
+    return it.speed + (it.speed === "Varies" ? "" : " ft. ");
+  }
 }
 const SZ_FINE = "F";
 const SZ_DIMINUTIVE = "D";
@@ -398,7 +394,7 @@ SOURCE_JSON_TO_FULL[SRC_TYP_AtG] = `${TftYP_NAME}: Against the Giants`;
 SOURCE_JSON_TO_FULL[SRC_TYP_DiT] = `${TftYP_NAME}: Dead in Thay`;
 SOURCE_JSON_TO_FULL[SRC_TYP_TFoF] = `${TftYP_NAME}: The Forge of Fury`;
 SOURCE_JSON_TO_FULL[
-    SRC_TYP_THSoT
+  SRC_TYP_THSoT
 ] = `${TftYP_NAME}: The Hidden Shrine of Tamoachan`;
 SOURCE_JSON_TO_FULL[SRC_TYP_TSC] = `${TftYP_NAME}: The Sunless Citadel`;
 SOURCE_JSON_TO_FULL[SRC_TYP_ToH] = `${TftYP_NAME}: Tomb of Horrors`;
@@ -428,9 +424,9 @@ SOURCE_JSON_TO_FULL[SRC_SAC] = "Sage Advice Compendium";
 SOURCE_JSON_TO_FULL[SRC_ERLW] = "Eberron: Rising from the Last War";
 SOURCE_JSON_TO_FULL[SRC_EFR] = "Eberron: Forgotten Relics";
 SOURCE_JSON_TO_FULL[SRC_RMBRE] =
-    "The Lost Dungeon of Rickedness: Big Rick Energy";
+  "The Lost Dungeon of Rickedness: Big Rick Energy";
 SOURCE_JSON_TO_FULL[SRC_RMR] =
-    "Dungeons & Dragons vs. Rick and Morty: Basic Rules";
+  "Dungeons & Dragons vs. Rick and Morty: Basic Rules";
 SOURCE_JSON_TO_FULL[SRC_MFF] = "Mordenkainen's Fiendish Folio";
 SOURCE_JSON_TO_FULL[SRC_AWM] = "Adventure with Muk";
 SOURCE_JSON_TO_FULL[SRC_IMR] = "Infernal Machine Rebuild";
@@ -447,7 +443,7 @@ SOURCE_JSON_TO_FULL[SRC_VRGR] = "Van Richten's Guide to Ravenloft";
 SOURCE_JSON_TO_FULL[SRC_HoL] = "The House of Lament";
 SOURCE_JSON_TO_FULL[SRC_SCREEN] = "Dungeon Master's Screen";
 SOURCE_JSON_TO_FULL[SRC_SCREEN_WILDERNESS_KIT] =
-    "Dungeon Master's Screen: Wilderness Kit";
+  "Dungeon Master's Screen: Wilderness Kit";
 SOURCE_JSON_TO_FULL[SRC_HEROES_FEAST] = "Heroes' Feast";
 SOURCE_JSON_TO_FULL[SRC_CM] = "Candlekeep Mysteries";
 SOURCE_JSON_TO_FULL[SRC_ALCoS] = `${AL_PREFIX}Curse of Strahd`;
@@ -521,10 +517,10 @@ SOURCE_JSON_TO_FULL[SRC_UA2020SC3] = `${UA_PREFIX}2020 Subclasses, Part 3`;
 SOURCE_JSON_TO_FULL[SRC_UA2020SC4] = `${UA_PREFIX}2020 Subclasses, Part 4`;
 SOURCE_JSON_TO_FULL[SRC_UA2020SC5] = `${UA_PREFIX}2020 Subclasses, Part 5`;
 SOURCE_JSON_TO_FULL[
-    SRC_UA2020SMT
+  SRC_UA2020SMT
 ] = `${UA_PREFIX}2020 Spells and Magic Tattoos`;
 SOURCE_JSON_TO_FULL[
-    SRC_UA2020POR
+  SRC_UA2020POR
 ] = `${UA_PREFIX}2020 Psionic Options Revisited`;
 SOURCE_JSON_TO_FULL[SRC_UA2020SCR] = `${UA_PREFIX}2020 Subclasses Revisited`;
 SOURCE_JSON_TO_FULL[SRC_UA2020F] = `${UA_PREFIX}2020 Feats`;

@@ -228,18 +228,18 @@ This will support any dice formula supported by the Dice Roller plugin.
 
 This is a list of features that are planned for the plugin. Some of these may or may not be developed.
 
--   Wikilink Player Characters
-    -   Automatically pull HP/AC from PC Note Wikilinked in settings
--   Wikilink Creatures
-    -   stat blocks on hover
--   Wikilink Tags (e.g., condition tag to display condition rules, spell tags for spell effects, etc.)
--   Creature stat blocks in separate moveable tab of sidebar
-    -   auto-update displayed stat block based on active creature in the encounter
--   ~~An option to build an encounter in a Note and send it to Initiative Tracker on demand (e.g., in an Obsidian Note, create some code block indicating 3 Goblins and 1 Bugbear in an area; press a button, add the 3 Goblins and Bugbear to the Initiative tracker)~~
--   ~~Encounter difficulty/XP tracker for creatures with CR~~
--   For the currently active creature, display any actions that would need a dice roll and an integrated dice roller with the specific dice and bonuses for the action already pre-loaded (e.g., for a Bugbear, display "Morningstar" and a to-hit dice with 1d20+4, as well as a damage dice of 2d8+2; Also display for the Javelin action)
--   Support for multiple parties
--   Integrated dice roller
+- Wikilink Player Characters
+  - Automatically pull HP/AC from PC Note Wikilinked in settings
+- Wikilink Creatures
+  - stat blocks on hover
+- Wikilink Tags (e.g., condition tag to display condition rules, spell tags for spell effects, etc.)
+- Creature stat blocks in separate moveable tab of sidebar
+  - auto-update displayed stat block based on active creature in the encounter
+- ~~An option to build an encounter in a Note and send it to Initiative Tracker on demand (e.g., in an Obsidian Note, create some code block indicating 3 Goblins and 1 Bugbear in an area; press a button, add the 3 Goblins and Bugbear to the Initiative tracker)~~
+- ~~Encounter difficulty/XP tracker for creatures with CR~~
+- For the currently active creature, display any actions that would need a dice roll and an integrated dice roller with the specific dice and bonuses for the action already pre-loaded (e.g., for a Bugbear, display "Morningstar" and a to-hit dice with 1d20+4, as well as a damage dice of 2d8+2; Also display for the Javelin action)
+- Support for multiple parties
+- Integrated dice roller
 
 # Installation
 
@@ -247,22 +247,22 @@ This is a list of features that are planned for the plugin. Some of these may or
 
 From Obsidian v0.9.8, you can activate this plugin within Obsidian by doing the following:
 
--   Open Settings > Third-party plugin
--   Make sure Safe mode is **off**
--   Click Browse community plugins
--   Search for this plugin
--   Click Install
--   Once installed, close the community plugins window and activate the newly installed plugin
+- Open Settings > Third-party plugin
+- Make sure Safe mode is **off**
+- Click Browse community plugins
+- Search for this plugin
+- Click Install
+- Once installed, close the community plugins window and activate the newly installed plugin
 
 ## From GitHub
 
--   Download the Latest Release from the Releases section of the GitHub Repository
--   Extract the plugin folder from the zip to your vault's plugins folder: `<vault>/.obsidian/plugins/`  
-    Note: On some machines the `.obsidian` folder may be hidden. On MacOS you should be able to press `Command+Shift+Dot` to show the folder in Finder.
--   Reload Obsidian
--   If prompted about Safe Mode, you can disable safe mode and enable the plugin.
-    Otherwise head to Settings, third-party plugins, make sure safe mode is off and
-    enable the plugin from there.
+- Download the Latest Release from the Releases section of the GitHub Repository
+- Extract the plugin folder from the zip to your vault's plugins folder: `<vault>/.obsidian/plugins/`  
+  Note: On some machines the `.obsidian` folder may be hidden. On MacOS you should be able to press `Command+Shift+Dot` to show the folder in Finder.
+- Reload Obsidian
+- If prompted about Safe Mode, you can disable safe mode and enable the plugin.
+  Otherwise head to Settings, third-party plugins, make sure safe mode is off and
+  enable the plugin from there.
 
 ### Updates
 
@@ -277,8 +277,8 @@ Please ensure you have automated backups.
 
 If you're using Obsidian to run/plan a TTRPG, you may find my other plugin useful:
 
--   [Obsidian Leaflet](https://github.com/valentine195/obsidian-leaflet-plugin) - Add interactive maps to Obsidian.md notes
--   [Dice Roller](https://github.com/valentine195/obsidian-dice-roller) - Inline dice rolling for Obsidian.md
--   [5e Statblocks](https://github.com/valentine195/obsidian-5e-statblocks) - Format statblocks 5e-style
+- [Obsidian Leaflet](https://github.com/valentine195/obsidian-leaflet-plugin) - Add interactive maps to Obsidian.md notes
+- [Dice Roller](https://github.com/valentine195/obsidian-dice-roller) - Inline dice rolling for Obsidian.md
+- [5e Statblocks](https://github.com/valentine195/obsidian-5e-statblocks) - Format statblocks 5e-style
 
 <a href="https://www.buymeacoffee.com/valentine195"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=valentine195&button_colour=e3e7ef&font_colour=262626&font_family=Inter&outline_colour=262626&coffee_colour=ff0000"></a>
