@@ -1,18 +1,24 @@
-# TTRPG Initiative Tracker for Obsidian.md
+# TTRPG Generic Initiative Tracker for Obsidian.md
 
 This plugin can be used as an initiative tracker within Obsidian.md.
 
-When enabled, the plugin will add an additional view in the right pane, where players and creatures can be added to track their initiatives during combat.
+When enabled, the plugin will add an additional view in the right pane, where
+players and creatures can be added to track their initiatives during combat.
+
+This is a trimmed-down fork of
+https://github.com/valentine195/obsidian-initiative-tracker which aims to
+separate out the iniative concepts from the DnD 5e specific stuff to make it
+system agnostic.
 
 ## Creating Encounters in Notes
 
-Encounters can be created and launched directly from notes as of `2.0.0` using the "encounter" code block, like so:
+Encounters can be created and launched directly from notes as of `0.0.1` using the "encounter" code block, like so:
 
 ````
 ```encounter
 name: Example
 creatures:
- - 3: Goblin
+ - 3: Goblin, 0, 0, 0
 ```
 ````
 
@@ -59,26 +65,24 @@ players:                                # Players will only be added to the enco
 
 The most complicated parameter, `creatures` may be used to add additional creatures to the encounter.
 
-The basic creature will be defined as an array with the syntax of `[name, hp, ac, initiative modifer, xp]`.
+The basic creature will be defined as an array with the syntax of `[name, hp, ac, initiative modifer]`.
 
-**Please note that in all cases, hp, ac, the modifier, and xp are optional.**
+**Please note that in all cases, hp, ac, and the modifier are optional.**
 
 ````
 ```encounter
 creatures:
   - My Monster                          # 1 monster named My Monster will be added, with no HP, AC or modifier.
   - Goblin, 7, 15, 2                    # 1 goblin with HP: 7, AC: 15, MOD: 2 will be added.
-  - Goblin, 5, 15, 2, 25                # 1 goblin with HP: 7, AC: 15, MOD: 2 worth 25 XP will be added.
 ```
 ````
 
-Multiple of the same creature may be added using `X: [name, hp, ac, initiative modifer, xp]`, which will add `X` creatures:
+Multiple of the same creature may be added using `X: [name, hp, ac, initiative modifer]`, which will add `X` creatures:
 
 ````
 ```encounter
 creatures:
   - 3: Goblin, 7, 15, 2                 # 3 goblins with HP: 7, AC: 15, MOD: 2 will be added.
-  - 2: Goblin, 5, 15, 2, 25             # 3 goblins with HP: 7, AC: 15, MOD: 2 worth 25 XP will be added.
 ```
 ````
 
@@ -90,40 +94,6 @@ creatures:
   - 2: Goblin, 7, 15, 2                 # 2 goblins with HP: 7, AC: 15, MOD: 2 will be added.
   - Goblin, 6, 15, 2                    # 1 goblin with HP: 6, AC: 15, MOD: 2 will be added.
   - Goblin, 9, 15, 2                    # 1 goblin with HP: 9, AC: 15, MOD: 2 will be added.
-```
-````
-
-##### Creatures from the Bestiary
-
-Creatures from your bestiary can be added by their name. This includes the full SRD creature list as well as any homebrew creatures added in Settings.
-
-````
-```encounter
-creatures:
-  - 2: Goblin                           # 2 goblins with HP: 7, AC: 15, MOD: 2 will be added.
-```
-````
-
-Creatures from the SRD Bestiary will auto-calculate their XP based on their challenge rating. Otherwise, you can supply a creature either a CR or an XP when creating it in settings.
-
-### Multiple Encounters
-
-The encounter code block supports an arbitrary number of encounters in one block, separated using `---`:
-
-````
-```encounter
-name: Example 1
-creatures:
- - Hobgoblin
- - 3: Goblin
-
----
-
-name: Example 2
-creatures:
- - 3: Hobgoblin
- - Goblin
-
 ```
 ````
 
@@ -190,29 +160,10 @@ Frontmatter should be formatted like this:
 hp: 23
 ac: 17
 modifier: 2
-level: 2
 ---
 ```
 
 In the future, this will be used to display more information about the player during combat, and also will update the player's information when the frontmatter is changed.
-
-## Display Encounter Difficulty
-
-This will show encounter difficulty based on creater CR and player level in both Encounters and the Initiative Tracker View.
-
-## Homebrew Content
-
-Homebrew creatures may be created and managed in settings. Homebrew creatures will be available in the monster picker when adding a creature to the combat.
-
-### 5e Statblocks Plugin
-
-If the [5e Statblocks](https://github.com/valentine195/obsidian-5e-statblocks) plugin is installed, the homebrew creatures saved to that plugin can be used in this plugin by enabling the sync in settings.
-
-### Import Homebrew
-
-**Only import content that you own.**
-
-Homebrew creatures can be imported from DnDAppFile XML files or Improved Initiative JSON files in settings.
 
 ## Initiative Formula
 
@@ -236,10 +187,6 @@ This is a list of features that are planned for the plugin. Some of these may or
 - Creature stat blocks in separate moveable tab of sidebar
   - auto-update displayed stat block based on active creature in the encounter
 - ~~An option to build an encounter in a Note and send it to Initiative Tracker on demand (e.g., in an Obsidian Note, create some code block indicating 3 Goblins and 1 Bugbear in an area; press a button, add the 3 Goblins and Bugbear to the Initiative tracker)~~
-- ~~Encounter difficulty/XP tracker for creatures with CR~~
-- For the currently active creature, display any actions that would need a dice roll and an integrated dice roller with the specific dice and bonuses for the action already pre-loaded (e.g., for a Bugbear, display "Morningstar" and a to-hit dice with 1d20+4, as well as a damage dice of 2d8+2; Also display for the Javelin action)
-- Support for multiple parties
-- Integrated dice roller
 
 # Installation
 
@@ -257,7 +204,7 @@ From Obsidian v0.9.8, you can activate this plugin within Obsidian by doing the 
 ## From GitHub
 
 - Download the Latest Release from the Releases section of the GitHub Repository
-- Extract the plugin folder from the zip to your vault's plugins folder: `<vault>/.obsidian/plugins/`  
+- Extract the plugin folder from the zip to your vault's plugins folder: `<vault>/.obsidian/plugins/`
   Note: On some machines the `.obsidian` folder may be hidden. On MacOS you should be able to press `Command+Shift+Dot` to show the folder in Finder.
 - Reload Obsidian
 - If prompted about Safe Mode, you can disable safe mode and enable the plugin.
@@ -275,10 +222,8 @@ Please ensure you have automated backups.
 
 # TTRPG plugins
 
-If you're using Obsidian to run/plan a TTRPG, you may find my other plugin useful:
+Check out valentine195's other plugins!
 
 - [Obsidian Leaflet](https://github.com/valentine195/obsidian-leaflet-plugin) - Add interactive maps to Obsidian.md notes
 - [Dice Roller](https://github.com/valentine195/obsidian-dice-roller) - Inline dice rolling for Obsidian.md
 - [5e Statblocks](https://github.com/valentine195/obsidian-5e-statblocks) - Format statblocks 5e-style
-
-<a href="https://www.buymeacoffee.com/valentine195"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=valentine195&button_colour=e3e7ef&font_colour=262626&font_family=Inter&outline_colour=262626&coffee_colour=ff0000"></a>
