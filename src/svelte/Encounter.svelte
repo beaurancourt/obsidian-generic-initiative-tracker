@@ -7,25 +7,16 @@
   const dispatch = createEventDispatcher();
 
   import type { Creature } from "src/utils/creature";
-  import {
-    encounterDifficulty,
-    formatDifficultyReport,
-  } from "src/utils/encounter-difficulty";
 
   export let name: string = "Encounter";
   export let creatures: Creature[] = [];
   export let players: boolean | string[] = true;
-  export let xp: number;
-
-  let totalXP = xp ?? 0;
-  export let playerLevels: number[];
 
   interface CreatureStats {
     name: string;
     ac: number;
     hp: number;
     modifier: number;
-    xp: number;
   }
 
   const displayMap: Array<[CreatureStats, number]> = [];
@@ -35,8 +26,7 @@
       creature.name == existing.name &&
       creature.ac == existing.ac &&
       creature.hp == existing.hp &&
-      creature.modifier == existing.modifier &&
-      creature.xp == existing.xp
+      creature.modifier == existing.modifier
     );
   };
 
@@ -46,7 +36,6 @@
       ac: creature.ac,
       hp: creature.hp,
       modifier: creature.modifier,
-      xp: creature.xp,
     };
     const existing = displayMap.find(([c]) => equivalent(c, stats));
     if (!existing) {
@@ -57,14 +46,7 @@
         existing[1] + 1,
       ]);
     }
-    if (!xp) {
-      totalXP += creature.xp;
-    }
   }
-  let difficulty = encounterDifficulty(
-    playerLevels,
-    creatures.map((creature) => creature.xp)
-  );
 
   const open = (node: HTMLElement) => {
     new ExtraButtonComponent(node)
@@ -122,25 +104,11 @@
               <strong>{count}</strong><span
                 >&nbsp;{creature.name}{count == 1 ? "" : "s"}</span
               >
-              {#if creature.xp}
-                <span>
-                  ({creature.xp * count} XP)
-                </span>
-              {/if}
             </li>
           {/each}
         </ul>
       {:else}
         <strong>No creatures</strong>
-      {/if}
-    </div>
-
-    <div class="encounter-xp">
-      {#if totalXP > 0 && difficulty}
-        <span aria-label={formatDifficultyReport(difficulty)}
-          >The encounter is <em>{difficulty.difficulty}<em /> ({totalXP} XP)</em
-          ></span
-        >
       {/if}
     </div>
   </div>

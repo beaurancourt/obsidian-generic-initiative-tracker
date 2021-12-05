@@ -231,10 +231,6 @@ export default class InitiativeTracker extends Plugin {
                     monster[3] && !isNaN(Number(monster[3]))
                       ? Number(monster[3])
                       : creature.modifier;
-                  creature.xp =
-                    monster[4] && !isNaN(Number(monster[4]))
-                      ? Number(monster[4])
-                      : creature.xp;
                 } else {
                   creature = new Creature({
                     name: monster[0],
@@ -250,16 +246,12 @@ export default class InitiativeTracker extends Plugin {
                       monster[3] && !isNaN(Number(monster[3]))
                         ? Number(monster[3])
                         : null,
-                    xp:
-                      monster[4] && !isNaN(Number(monster[4]))
-                        ? Number(monster[4])
-                        : null,
                     marker: this.data.monsterMarker,
                   });
                 }
 
                 return [
-                  ...[...Array(number).keys()].map((k) =>
+                  ...[...Array(number).keys()].map((_) =>
                     Creature.from(creature)
                   ),
                 ];
