@@ -70,25 +70,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
         }
       }
 
-      new Setting(containerEl)
-        .setName("Display Encounter Difficulty")
-        .setDesc(
-          "Display encounter difficulty based on creature CR and player level. Creatures without CR or level will not be considered in the calculation."
-        )
-        .addToggle((t) => {
-          t.setValue(this.plugin.data.displayDifficulty).onChange(async (v) => {
-            this.plugin.data.displayDifficulty = v;
-
-            if (this.plugin.view) {
-              this.plugin.view.setDisplayDifficulty(
-                this.plugin.data.displayDifficulty
-              );
-            }
-
-            await this.plugin.saveSettings();
-          });
-        });
-
       const formula = new Setting(containerEl)
         .setName("Initiative Formula")
 
@@ -685,17 +666,16 @@ class NewPlayerModal extends Modal {
 
           if (!metaData || !metaData.frontmatter) return;
 
-          const { ac, hp, modifier, level } = metaData.frontmatter;
+          const { ac, hp, modifier } = metaData.frontmatter;
           this.player = {
             ...this.player,
-            ...{ ac, hp, modifier, level },
+            ...{ ac, hp, modifier },
           };
           this.display();
         };
       });
 
     let nameInput: InputValidate,
-      levelInput: InputValidate,
       hpInput: InputValidate,
       acInput: InputValidate,
       modInput: InputValidate;
@@ -723,27 +703,6 @@ class NewPlayerModal extends Modal {
         t.onChange((v) => {
           t.inputEl.removeClass("has-error");
           this.player.name = v;
-        });
-      });
-    new Setting(contentEl)
-      .setName("Level")
-      .setDesc("Player level.")
-      .addText((t) => {
-        levelInput = {
-          input: t.inputEl,
-          validate: (i: HTMLInputElement) => {
-            let error = false;
-            if (isNaN(Number(i.value)) || Number(i.value) <= 0) {
-              i.addClass("has-error");
-              error = true;
-            }
-            return error;
-          },
-        };
-        t.setValue(`${this.player.level ?? ""}`);
-        t.onChange((v) => {
-          t.inputEl.removeClass("has-error");
-          this.player.level = Number(v);
         });
       });
     new Setting(contentEl).setName("Max Hit Points").addText((t) => {

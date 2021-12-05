@@ -21,9 +21,7 @@
     let initiative: number;
     let ac: string;
     let modifier: number;
-    let xp: number;
     let player: boolean;
-    let level: number;
 
     const saveButton = (node: HTMLElement) => {
         new ExtraButtonComponent(node)
@@ -46,9 +44,7 @@
                         modifier,
                     ac,
                     modifier,
-                    xp,
-                    player,
-                    level
+                    player
                 });
             });
     };
@@ -80,10 +76,8 @@
                 if (newCreature.hp) hp = `${newCreature.hp}`;
                 if (newCreature.ac) ac = `${newCreature.ac}`;
                 modifier = newCreature.modifier ?? 0;
-                xp = newCreature.xp;
 
                 player = newCreature.player;
-                level = newCreature.level;
 
                 initiative = await view.getInitiativeValue(modifier);
             }

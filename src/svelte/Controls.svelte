@@ -35,7 +35,7 @@
     const stopButton = (node: HTMLElement) => {
         new ExtraButtonComponent(node)
             .setIcon(STOP)
-            .setTooltip("Stop") /* 
+            .setTooltip("Stop") /*
             .setDisabled(numberOfCreatures == 0) */
             .onClick(() => {
                 view.toggleState();
