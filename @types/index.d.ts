@@ -90,7 +90,6 @@ export interface CreatureState extends HomebrewCreature {
   currentHP: number;
   initiative: number;
   player: boolean;
-  xp: number;
 }
 
 export interface SRDMonster {
@@ -131,7 +130,6 @@ export interface HomebrewCreature {
   cr?: number | string;
   modifier?: number;
   note?: string;
-  level?: number;
   player?: boolean;
   marker?: string;
   id?: string;

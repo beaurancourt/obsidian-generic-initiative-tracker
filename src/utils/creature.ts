@@ -24,14 +24,12 @@ export class Creature {
   note: string;
   enabled: boolean = true;
   max: number;
-  level: number;
   player: boolean;
   status: Set<Condition> = new Set();
   marker: string;
   private _initiative: number;
   source: string;
   id: string;
-  xp: number;
   constructor(creature: HomebrewCreature, initiative: number = 0) {
     this.name = creature.name;
     this._initiative = Number(initiative ?? 0);
@@ -40,7 +38,6 @@ export class Creature {
     this.max = creature.hp ? Number(creature.hp) : undefined;
     this.ac = creature.ac ? Number(creature.ac) : undefined;
     this.note = creature.note;
-    this.level = creature.level;
     this.player = creature.player;
 
     this.marker = creature.marker;
@@ -48,11 +45,6 @@ export class Creature {
     this.hp = this.max;
     this.source = creature.source;
 
-    if ("xp" in creature) {
-      this.xp = creature.xp;
-    } else if ("cr" in creature) {
-      this.xp = XP_PER_CR[`${creature.cr}`];
-    }
     this.id = creature.id ?? getId();
   }
   get hpDisplay() {
@@ -78,7 +70,6 @@ export class Creature {
     yield this.note;
     yield this.id;
     yield this.marker;
-    yield this.xp;
   }
 
   static from(creature: HomebrewCreature | SRDMonster) {
@@ -111,7 +102,6 @@ export class Creature {
 
     this.ac = creature.ac ? Number(creature.ac) : undefined;
     this.note = creature.note;
-    this.level = creature.level;
     this.player = creature.player;
 
     this.marker = creature.marker;
@@ -135,9 +125,7 @@ export class Creature {
       currentHP: this.hp,
       status: Array.from(this.status).map((c) => c.name),
       enabled: this.enabled,
-      level: this.level,
       player: this.player,
-      xp: this.xp,
     };
   }
 
