@@ -4,8 +4,7 @@ import type {
   HomebrewCreature,
   SRDMonster,
 } from "@types";
-import type InitiativeTracker from "src/main";
-import { Conditions, XP_PER_CR } from ".";
+import { Conditions } from ".";
 import { DEFAULT_UNDEFINED } from "./constants";
 
 function getId() {
