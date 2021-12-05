@@ -64,7 +64,6 @@ export interface InputValidate {
 }
 
 export interface InitiativeTrackerData {
-  displayDifficulty: boolean;
   players: HomebrewCreature[];
   homebrew: HomebrewCreature[];
   version: string;
