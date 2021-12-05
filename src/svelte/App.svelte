@@ -14,13 +14,6 @@
     import { ConditionSuggestionModal } from "src/utils/suggester";
     import type { Condition } from "@types";
     import { createEventDispatcher } from "svelte";
-    import {
-        encounterDifficulty,
-        formatDifficultyReport
-    } from "src/utils/encounter-difficulty";
-    import type { DifficultyReport } from "src/utils/encounter-difficulty";
-    import { tweened } from "svelte/motion";
-    import { cubicOut } from "svelte/easing";
 
     const dispatch = createEventDispatcher();
 
@@ -29,57 +22,7 @@
     export let state: boolean;
     export let current: number;
     export let map: boolean;
-    export let xp: number;
-    export let displayDifficulty: boolean;
 
-    let canDisplayDifficulty = false;
-
-    let totalXP = xp;
-    $: {
-        if (!xp) {
-            totalXP = creatures
-                ?.filter((creature) => creature.xp)
-                ?.reduce((num, cr) => num + cr.xp, 0);
-        }
-    }
-
-    // update encounter difficulty
-    const difficultyBar = tweened(0, {
-        duration: 400,
-        easing: cubicOut
-    });
-
-    let dr: DifficultyReport;
-    $: {
-        let playerLevels: number[] = [];
-        let monstersXp: number[] = [];
-        creatures
-            ?.filter((creature) => creature.enabled)
-            ?.forEach((creature) => {
-                if (creature.level) {
-                    playerLevels.push(creature.level);
-                } else {
-                    monstersXp.push(creature.xp);
-                }
-            });
-        let dif = encounterDifficulty(
-            playerLevels.filter((p) => p),
-            monstersXp.filter((m) => m)
-        );
-
-        if (!dif) {
-            canDisplayDifficulty = false;
-        } else {
-            canDisplayDifficulty = true;
-
-            let progress =
-                dif.adjustedXp / dif.budget.deadly > 1
-                    ? 1
-                    : dif.adjustedXp / dif.budget.deadly;
-            difficultyBar.set(progress);
-            dr = dif;
-        }
-    }
     let view: TrackerView;
     store.view.subscribe((v) => (view = v));
 
@@ -133,11 +76,6 @@
     {#if name && name.length}
         <div class="initiative-tracker-name-container">
             <h2 class="initiative-tracker-name">{name}</h2>
-            {#if totalXP > 0}
-                <span class="initiative-tracker-xp encounter-xp"
-                    >{totalXP} XP</span
-                >
-            {/if}
         </div>
     {/if}
     <Table
@@ -152,25 +90,6 @@
             updatingStatus = evt.detail;
         }}
     />
-    {#if displayDifficulty && canDisplayDifficulty}
-        <div
-            class="difficulty-bar-container"
-            aria-label={formatDifficultyReport(dr)}
-        >
-            <span>Easy</span>
-            <span
-                ><meter
-                    class="difficulty-bar"
-                    min="0"
-                    low="0.33"
-                    high="0.66"
-                    optimum="0"
-                    value={$difficultyBar}
-                /></span
-            >
-            <span>Deadly</span>
-        </div>
-    {/if}
     {#if updatingHP}
         <div class="updating-hp">
             <span>Apply damage(+) or healing(-):</span>
@@ -258,9 +177,7 @@
                                 ac: creature.ac,
                                 modifier: creature.modifier,
                                 marker: view.plugin.data.monsterMarker,
-                                xp: creature.xp,
                                 player: creature.player,
-                                level: creature.level
                             },
                             creature.initiative
                         );
@@ -318,19 +235,5 @@
     }
     .initiative-tracker-name {
         margin: 0;
-    }
-    .difficulty-bar-container {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 0.5rem;
-        align-items: center;
-        padding: 0 0.5rem;
-        margin-bottom: 0.5rem;
-        width: 100%;
-    }
-    .difficulty-bar {
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 3px;
     }
 </style>
