@@ -101,9 +101,7 @@
         <ul>
           {#each displayMap as [creature, count]}
             <li aria-label={label(creature)} class="creature-li">
-              <strong>{count}</strong><span
-                >&nbsp;{creature.name}{count == 1 ? "" : "s"}</span
-              >
+              <strong>{count}</strong>&nbsp;<a data-href="{creature.name}" href="{creature.name}" class="internal-link" target="_blank" rel="noopener">{creature.name}</a>
             </li>
           {/each}
         </ul>

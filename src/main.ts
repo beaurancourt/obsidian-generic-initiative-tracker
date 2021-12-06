@@ -157,6 +157,7 @@ export default class InitiativeTracker extends Plugin {
                     if (num && !isNaN(Number(num))) {
                       number = Number(num);
                     }
+                    console.log(mon);
                     monster = parseYaml(mon);
                   } catch (e) {
                     console.error(e);
