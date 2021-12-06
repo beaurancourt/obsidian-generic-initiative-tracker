@@ -10,6 +10,16 @@ https://github.com/valentine195/obsidian-initiative-tracker which aims to
 separate out the iniative concepts from the DnD 5e specific stuff to make it
 system agnostic.
 
+## Main Differences
+
+- No XP or Level settings
+- Dropped support for homebrew creatures
+- Dropped all of the 5e specific import functionality
+- Massively simplified the settings screen
+- Made the encounter renderer use internal links
+- Give multiple creatures with the same name a unique index
+- Misc bugfixes
+
 ## Creating Encounters in Notes
 
 Encounters can be created and launched directly from notes as of `1.0.0` using the "encounter" code block, like so:
