@@ -5,14 +5,12 @@ import {
   Scope,
   Setting,
   SuggestModal,
-  TextComponent,
-  TFile,
 } from "obsidian";
 import { createPopper, Instance as PopperInstance } from "@popperjs/core";
 
 import { Conditions } from "./conditions";
 
-import type { HomebrewCreature, SRDMonster, Condition } from "@types";
+import type { HomebrewCreature, Condition } from "@types";
 import type InitiativeTracker from "src/main";
 
 class Suggester<T> {
@@ -71,7 +69,7 @@ class Suggester<T> {
     this.useSelectedItem(event);
   }
 
-  onSuggestionMouseover(event: MouseEvent, el: HTMLDivElement): void {
+  onSuggestionMouseover(_: MouseEvent, el: HTMLDivElement): void {
     if (!this.suggestions || !this.suggestions.length) return;
     const item = this.suggestions.indexOf(el);
     this.setSelectedItem(item, false);
@@ -228,72 +226,6 @@ abstract class SuggestionModal<T> extends FuzzySuggestModal<T> {
   abstract getItems(): T[];
 }
 
-export class SRDMonsterSuggestionModal extends SuggestionModal<
-  HomebrewCreature | SRDMonster
-> {
-  creature: HomebrewCreature | SRDMonster;
-  creatures: (HomebrewCreature | SRDMonster)[];
-  constructor(public plugin: InitiativeTracker, inputEl: HTMLInputElement) {
-    super(plugin.app, inputEl);
-    this.creatures = [...this.plugin.data.players, ...this.plugin.bestiary];
-    this.onInputChanged();
-  }
-  getItems() {
-    return this.creatures;
-  }
-  getItemText(item: HomebrewCreature | SRDMonster) {
-    return item.name;
-  }
-  onChooseItem(item: HomebrewCreature | SRDMonster) {
-    this.inputEl.value = item.name;
-    this.creature = item;
-  }
-  selectSuggestion({ item }: FuzzyMatch<HomebrewCreature | SRDMonster>) {
-    this.inputEl.value = item.name;
-    this.creature = item;
-
-    this.onClose();
-    this.close();
-  }
-  renderSuggestion(
-    result: FuzzyMatch<HomebrewCreature | SRDMonster>,
-    el: HTMLElement
-  ) {
-    let { item, match: matches } = result || {};
-
-    let content = el.createDiv({
-      cls: "suggestion-content icon",
-    });
-    if (!item) {
-      this.suggester.selectedItem = null;
-      content.setText(this.emptyStateText);
-      content.parentElement.addClass("is-selected");
-      return;
-    }
-
-    const matchElements = matches.matches.map((m) => {
-      return createSpan("suggestion-highlight");
-    });
-    for (let i = 0; i < item.name.length; i++) {
-      let match = matches.matches.find((m) => m[0] === i);
-      if (match) {
-        let element = matchElements[matches.matches.indexOf(match)];
-        content.appendChild(element);
-        element.appendText(item.name.substring(match[0], match[1]));
-
-        i += match[1] - match[0] - 1;
-        continue;
-      }
-
-      content.appendText(item.name[i]);
-    }
-    el.createDiv({
-      cls: "suggestion-note",
-      text: item.source,
-    });
-  }
-}
-
 abstract class ElementSuggestionModal<T> extends FuzzySuggestModal<T> {
   items: T[] = [];
   suggestions: HTMLDivElement[];
@@ -388,7 +320,7 @@ export class HomebrewMonsterSuggestionModal extends ElementSuggestionModal<Homeb
     this.inputEl.value = item.name;
     this.creature = item;
   }
-  selectSuggestion({ item }: FuzzyMatch<HomebrewCreature>) {
+  selectSuggestion(_: FuzzyMatch<HomebrewCreature>) {
     return;
   }
   renderSuggestion(result: FuzzyMatch<HomebrewCreature>, el: HTMLElement) {
@@ -402,7 +334,7 @@ export class HomebrewMonsterSuggestionModal extends ElementSuggestionModal<Homeb
       return;
     }
 
-    const matchElements = matches.matches.map((m) => {
+    const matchElements = matches.matches.map((_) => {
       return createSpan("suggestion-highlight");
     });
     for (let i = 0; i < item.name.length; i++) {
@@ -431,8 +363,8 @@ export class HomebrewMonsterSuggestionModal extends ElementSuggestionModal<Homeb
         .onClick(() => this.onRemoveItem(item));
     });
   }
-  onEditItem(item: HomebrewCreature) {}
-  onRemoveItem(item: HomebrewCreature) {}
+  onEditItem(_: HomebrewCreature) {}
+  onRemoveItem(_: HomebrewCreature) {}
 }
 
 export class ConditionSuggestionModal extends SuggestionModal<Condition> {
@@ -484,7 +416,7 @@ export class ConditionSuggestionModal extends SuggestionModal<Condition> {
       return;
     }
 
-    const matchElements = matches.matches.map((m) => {
+    const matchElements = matches.matches.map((_) => {
       return createSpan("suggestion-highlight");
     });
     for (let i = 0; i < item.name.length; i++) {

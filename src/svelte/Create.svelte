@@ -65,25 +65,6 @@
                     Math.floor(Math.random() * 19 + 1) + (modifier ?? 0);
             });
     };
-
-    const openModal = (nameInput: HTMLInputElement) => {
-        const modal = new SRDMonsterSuggestionModal(view.plugin, nameInput);
-        modal.onClose = async () => {
-            if (modal.creature) {
-                let newCreature = Creature.from(modal.creature);
-
-                name = newCreature.name;
-                if (newCreature.hp) hp = `${newCreature.hp}`;
-                if (newCreature.ac) ac = `${newCreature.ac}`;
-                modifier = newCreature.modifier ?? 0;
-
-                player = newCreature.player;
-
-                initiative = await view.getInitiativeValue(modifier);
-            }
-        };
-        modal.open();
-    };
 </script>
 
 <div class="create-new">
@@ -91,9 +72,6 @@
         <label for="add-name">Name</label>
         <input
             bind:value={name}
-            on:focus={function () {
-                openModal(this);
-            }}
             id="add-name"
             type="text"
             name="name"
