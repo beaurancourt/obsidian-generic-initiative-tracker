@@ -235,31 +235,6 @@ class NewPlayerModal extends Modal {
       text: this.original ? "Edit Player" : "New Player",
     });
 
-    new Setting(contentEl)
-      .setName("Link to Note")
-      .setDesc("Link player to a note in your vault.")
-      .addText((t) => {
-        t.setValue(this.player.note ?? "");
-        const modal = new FileSuggestionModal(this.app, t);
-        modal.onClose = async () => {
-          if (!modal.file) return;
-
-          const metaData = this.app.metadataCache.getFileCache(modal.file);
-
-          this.player.note = modal.file.basename;
-          this.player.name = modal.file.basename;
-
-          if (!metaData || !metaData.frontmatter) return;
-
-          const { ac, hp, modifier } = metaData.frontmatter;
-          this.player = {
-            ...this.player,
-            ...{ ac, hp, modifier },
-          };
-          this.display();
-        };
-      });
-
     let nameInput: InputValidate,
       hpInput: InputValidate,
       acInput: InputValidate,
