@@ -31,13 +31,9 @@ declare module "obsidian" {
   interface App {
     plugins: {
       plugins: {
-        "obsidian-5e-statblocks": {
-          data: Map<string, SRDMonster>;
-        };
         "obsidian-dice-roller": {
           parseDice(text: string): Promise<{ result: number }>;
         };
-        "obsidian-leaflet-plugin": ObsidianLeafletPlugin;
         "initiative-tracker": InitiativeTracker;
       };
     };
@@ -57,45 +53,6 @@ export default class InitiativeTracker extends Plugin {
 
   get canUseDiceRoller() {
     return "obsidian-dice-roller" in this.app.plugins.plugins;
-  }
-
-  get canUseStatBlocks() {
-    return "obsidian-5e-statblocks" in this.app.plugins.plugins;
-  }
-
-  get canUseLeaflet() {
-    return (
-      "obsidian-leaflet-plugin" in this.app.plugins.plugins &&
-      Number(
-        this.app.plugins.plugins["obsidian-leaflet-plugin"].data?.version
-          ?.major >= 4
-      )
-    );
-  }
-
-  get leaflet() {
-    if (this.canUseLeaflet) {
-      return this.app.plugins.plugins["obsidian-leaflet-plugin"];
-    }
-  }
-
-  get statblock_creatures() {
-    if (!this.data.sync) return [];
-    if (!this.app.plugins.plugins["obsidian-5e-statblocks"]) return [];
-
-    return [
-      ...Array.from(
-        this.app.plugins.plugins["obsidian-5e-statblocks"].data.values()
-      ),
-    ];
-  }
-
-  get homebrew() {
-    return [...this.statblock_creatures, ...this.data.homebrew];
-  }
-
-  get bestiary() {
-    return this.homebrew;
   }
 
   get view() {
@@ -162,9 +119,6 @@ export default class InitiativeTracker extends Plugin {
     this.playerCreatures = new Map(
       this.data.players.map((p) => [p, Creature.from(p)])
     );
-    this.homebrewCreatures = new Map(
-      this.bestiary.map((p) => [p, Creature.from(p)])
-    );
 
     this.app.workspace.onLayoutReady(() => this.addTrackerView());
 
@@ -174,7 +128,7 @@ export default class InitiativeTracker extends Plugin {
   encounterProcessor(
     src: string,
     el: HTMLElement,
-    ctx: MarkdownPostProcessorContext
+    _: MarkdownPostProcessorContext
   ) {
     const encounters = src.split("---") ?? [];
     const containerEl = el.createDiv("encounter-container");
@@ -213,42 +167,22 @@ export default class InitiativeTracker extends Plugin {
                 if (typeof monster == "string") {
                   monster = [monster.split(",")].flat();
                 }
-                let creature: Creature;
-                const bestiary = this.bestiary.find(
-                  (b) => b.name == monster[0]
-                );
-                if (bestiary) {
-                  creature = Creature.from(bestiary);
-                  creature.hp =
+                let creature = new Creature({
+                  name: monster[0],
+                  hp:
                     monster[1] && !isNaN(Number(monster[1]))
                       ? Number(monster[1])
-                      : creature.hp;
-                  creature.ac =
+                      : null,
+                  ac:
                     monster[2] && !isNaN(Number(monster[2]))
                       ? Number(monster[2])
-                      : creature.ac;
-                  creature.modifier =
+                      : null,
+                  modifier:
                     monster[3] && !isNaN(Number(monster[3]))
                       ? Number(monster[3])
-                      : creature.modifier;
-                } else {
-                  creature = new Creature({
-                    name: monster[0],
-                    hp:
-                      monster[1] && !isNaN(Number(monster[1]))
-                        ? Number(monster[1])
-                        : null,
-                    ac:
-                      monster[2] && !isNaN(Number(monster[2]))
-                        ? Number(monster[2])
-                        : null,
-                    modifier:
-                      monster[3] && !isNaN(Number(monster[3]))
-                        ? Number(monster[3])
-                        : null,
-                    marker: this.data.monsterMarker,
-                  });
-                }
+                      : null,
+                  marker: this.data.monsterMarker,
+                });
 
                 return [
                   ...[...Array(number).keys()].map((_) =>
@@ -276,15 +210,12 @@ export default class InitiativeTracker extends Plugin {
           }
         }
 
-        const xp = params.xp ?? null;
-
         const instance = new Encounter({
           target: encounterEl,
           props: {
             ...(params.name ? { name: params.name } : {}),
             players,
             creatures,
-            xp,
           },
         });
 
@@ -296,7 +227,6 @@ export default class InitiativeTracker extends Plugin {
             this.view?.newEncounter({
               ...params,
               creatures: creatures,
-              xp,
             });
             this.app.workspace.revealLeaf(this.view.leaf);
           } else {
@@ -387,20 +317,6 @@ export default class InitiativeTracker extends Plugin {
     });
   }
 
-  async saveMonsters(importedMonsters: HomebrewCreature[]) {
-    this.data.homebrew.push(...importedMonsters);
-
-    for (let monster of importedMonsters) {
-      this.homebrewCreatures.set(monster, Creature.from(monster));
-    }
-
-    await this.saveSettings();
-  }
-  async saveMonster(monster: HomebrewCreature) {
-    this.data.homebrew.push(monster);
-    this.homebrewCreatures.set(monster, Creature.from(monster));
-    await this.saveSettings();
-  }
   async updatePlayer(existing: HomebrewCreature, player: HomebrewCreature) {
     if (!this.playerCreatures.has(existing)) {
       await this.savePlayer(player);
@@ -418,32 +334,6 @@ export default class InitiativeTracker extends Plugin {
     if (this.view) {
       this.view.updateState();
     }
-
-    await this.saveSettings();
-  }
-  async updateMonster(existing: HomebrewCreature, monster: HomebrewCreature) {
-    if (!this.homebrewCreatures.has(existing)) {
-      await this.saveMonster(monster);
-      return;
-    }
-
-    const creature = this.homebrewCreatures.get(existing);
-    creature.update(monster);
-
-    this.data.homebrew.splice(this.data.homebrew.indexOf(existing), 1, monster);
-
-    this.homebrewCreatures.set(monster, creature);
-    this.homebrewCreatures.delete(existing);
-
-    if (this.view) {
-      this.view.updateState();
-    }
-
-    await this.saveSettings();
-  }
-  async deleteMonster(monster: HomebrewCreature) {
-    this.data.homebrew = this.data.homebrew.filter((m) => m != monster);
-    this.homebrewCreatures.delete(monster);
 
     await this.saveSettings();
   }
