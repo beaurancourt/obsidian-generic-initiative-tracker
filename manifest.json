@@ -1,10 +1,10 @@
 {
   "id": "generic-initiative-tracker",
   "name": "Generic Initiative Tracker",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "minAppVersion": "0.12.10",
   "author": "Beau Shinkle",
-  "description": "TTRPG Initiative Tracker for Obsidian.md",
+  "description": "TTRPG Generic Initiative Tracker for Obsidian.md",
   "authorUrl": "https://github.com/beaushinkle/obsidian-generic-initiative-tracker",
   "isDesktopOnly": false
 }
