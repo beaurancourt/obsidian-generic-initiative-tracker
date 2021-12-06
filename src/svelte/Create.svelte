@@ -8,13 +8,27 @@
     import store from "./store";
 
     import type TrackerView from "src/view";
-    import { SRDMonsterSuggestionModal } from "src/utils/suggester";
-    import { Creature } from "src/utils/creature";
 
     const dispatch = createEventDispatcher();
 
     let view: TrackerView;
     store.view.subscribe((v) => (view = v));
+
+
+    async function getInitiativeValue(modifier: number = 0): Promise<number> {
+      let initiative = Math.floor(Math.random() * 19 + 1) + modifier;
+      console.log(view.plugin)
+      if (view.plugin.canUseDiceRoller) {
+        const num = await view.plugin.app.plugins.plugins[
+        "obsidian-dice-roller"
+        ].parseDice(
+          view.plugin.data.initiative.replace(/%mod%/g, `(${modifier})`)
+        );
+
+        initiative = num.result;
+      }
+      return initiative;
+    }
 
     let name: string;
     let hp: string;
@@ -36,16 +50,27 @@
                     modifier = 0;
                 }
 
-                dispatch("save", {
-                    name,
-                    hp,
-                    initiative:
-                        (initiative ?? Math.floor(Math.random() * 19 + 1)) -
+                if (!initiative) {
+                  getInitiativeValue(modifier).then(init => {
+                    dispatch("save", {
+                        name,
+                        hp,
+                        initiative: init,
+                        ac,
                         modifier,
-                    ac,
-                    modifier,
-                    player
-                });
+                        player
+                    });
+                  })
+                } else {
+                  dispatch("save", {
+                      name,
+                      hp,
+                      initiative,
+                      ac,
+                      modifier,
+                      player
+                  });
+                }
             });
     };
     const cancelButton = (node: HTMLElement) => {
@@ -61,8 +86,9 @@
             .setIcon(DICE)
             .setTooltip("Roll Initiative")
             .onClick(() => {
-                initiative =
-                    Math.floor(Math.random() * 19 + 1) + (modifier ?? 0);
+                getInitiativeValue((modifier ?? 0)).then(init => {
+                  initiative = init
+                })
             });
     };
 </script>

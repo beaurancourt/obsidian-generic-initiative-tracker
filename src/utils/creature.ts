@@ -31,8 +31,8 @@ export class Creature {
   id: string;
   constructor(creature: HomebrewCreature, initiative: number = 0) {
     this.name = creature.name;
-    this._initiative = Number(initiative ?? 0);
     this.modifier = Number(creature.modifier ?? 0);
+    this._initiative = Number(initiative ?? 0) - this.modifier;
 
     this.max = creature.hp ? Number(creature.hp) : undefined;
     this.ac = creature.ac ? Number(creature.ac) : undefined;
