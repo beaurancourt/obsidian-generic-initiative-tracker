@@ -223,13 +223,11 @@ export default class TrackerView extends ItemView {
     players = true,
     creatures = [],
     roll = true,
-    xp = null,
   }: {
     name?: string;
     players?: boolean | string[];
     creatures?: Creature[];
     roll?: boolean;
-    xp?: number;
   } = {}) {
     if (players instanceof Array && players.length) {
       this.creatures = [
@@ -246,7 +244,6 @@ export default class TrackerView extends ItemView {
       this.name = name;
       this.setAppState({
         name: this.name,
-        xp,
       });
     }
 
@@ -493,7 +490,6 @@ export default class TrackerView extends ItemView {
         show: show,
         state: this.state,
         current: this.current,
-        map: this.plugin.data.leafletIntegration,
       },
     });
     this._rendered = true;
@@ -512,9 +508,6 @@ export default class TrackerView extends ItemView {
   }
   getIcon() {
     return BASE;
-  }
-  openInitiativeView() {
-    this.plugin.leaflet.openInitiativeView(this.pcs, this.npcs);
   }
 
   trigger(...args: TrackerEvents) {

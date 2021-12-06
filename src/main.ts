@@ -6,8 +6,6 @@ import {
   WorkspaceLeaf,
 } from "obsidian";
 
-import type ObsidianLeafletPlugin from "../../obsidian-leaflet-plugin/src/main";
-
 import {
   DEFAULT_SETTINGS,
   INTIATIVE_TRACKER_VIEW,
@@ -17,7 +15,6 @@ import type {
   EventsOnArgs,
   HomebrewCreature,
   InitiativeTrackerData,
-  SRDMonster,
 } from "../@types/index";
 
 import InitiativeTrackerSettings from "./settings";
@@ -378,10 +375,7 @@ export default class InitiativeTracker extends Plugin {
   }
 
   async saveSettings() {
-    if (
-      this.data.leafletIntegration &&
-      !this.data.players.every((p) => p.marker)
-    ) {
+    if (!this.data.players.every((p) => p.marker)) {
       this.data.players = this.data.players.map((p) => {
         p.marker = p.marker ?? this.data.playerMarker;
         return p;

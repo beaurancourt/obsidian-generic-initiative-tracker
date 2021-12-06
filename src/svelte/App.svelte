@@ -66,6 +66,25 @@
         };
         modal.open();
     };
+
+    const renameCreatures = (creatures: Creature[]): Creature[] => {
+      const creatureNameMap = creatures.reduce((soFar, creature) => {
+        const seen = soFar[creature.name] || []
+        soFar[creature.name] = [...seen, creature]
+        return soFar
+      }, {} as Record<string, Creature[]>)
+      console.log(creatureNameMap)
+      for (let [name, creaturesPerName] of Object.entries(creatureNameMap)) {
+        if (creaturesPerName.length > 1) {
+          for (let i = 0; i <= creaturesPerName.length - 1; i++) {
+            creaturesPerName[i].name = name + "#" + (i+1)
+          }
+        }
+      }
+      console.log(creatureNameMap)
+      return creatures
+    }
+
     function init(el: HTMLInputElement) {
         el.focus();
     }
@@ -79,7 +98,7 @@
         </div>
     {/if}
     <Table
-        {creatures}
+        creatures={renameCreatures(creatures)}
         {show}
         {state}
         {current}

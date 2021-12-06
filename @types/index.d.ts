@@ -132,7 +132,6 @@ export interface HomebrewCreature {
   player?: boolean;
   marker?: string;
   id?: string;
-  xp?: number;
 }
 
 export type ability =

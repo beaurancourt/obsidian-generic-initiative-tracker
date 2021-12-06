@@ -77,9 +77,4 @@
         display: contents;
         font-weight: bolder;
     }
-    /*     .updating-hp {
-        display: grid;
-        grid-template-rows: auto 1fr;
-        width: 100%;
-    } */
 </style>
