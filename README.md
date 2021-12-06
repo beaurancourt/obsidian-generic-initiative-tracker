@@ -12,7 +12,7 @@ system agnostic.
 
 ## Creating Encounters in Notes
 
-Encounters can be created and launched directly from notes as of `0.0.1` using the "encounter" code block, like so:
+Encounters can be created and launched directly from notes as of `1.0.0` using the "encounter" code block, like so:
 
 ````
 ```encounter
@@ -141,35 +141,17 @@ If the encounter is active, this command can be used to make the previous enable
 
 # Settings
 
-The setting tab has several options for adding and managing players and homebrew creatures, as well as the ability to change the formula used to calculate the initiative.
+The setting tab has options for adding and managing players and the ability to change the formula used to calculate the initiative.
 
 ## Players
 
 Players may be added in settings. Players created in this way will be automatically added to encounters.
 
-### Players from Notes
-
-When adding a new player, there is the option to add a player based on a note.
-
-Currently, this functionality will only read the frontmatter of a note to pull in the relevant fields - hp, ac, and initiative modifier.
-
-Frontmatter should be formatted like this:
-
-```
----
-hp: 23
-ac: 17
-modifier: 2
----
-```
-
-In the future, this will be used to display more information about the player during combat, and also will update the player's information when the frontmatter is changed.
-
 ## Initiative Formula
 
 > This setting can only be modified when the [Dice Roller](https://github.com/valentine195/obsidian-dice-roller) plugin is installed.
 
-This setting can be used to modify how a creature's initiative is calculated by the plugin. Use `%mod` as a placeholder for the creature's initiative modifier.
+This setting can be used to modify how a creature's initiative is calculated by the plugin. Use `%mod%` as a placeholder for the creature's initiative modifier.
 
 It defaults to `1d20 + %mod%`.
 
@@ -179,14 +161,8 @@ This will support any dice formula supported by the Dice Roller plugin.
 
 This is a list of features that are planned for the plugin. Some of these may or may not be developed.
 
-- Wikilink Player Characters
-  - Automatically pull HP/AC from PC Note Wikilinked in settings
-- Wikilink Creatures
-  - stat blocks on hover
-- Wikilink Tags (e.g., condition tag to display condition rules, spell tags for spell effects, etc.)
-- Creature stat blocks in separate moveable tab of sidebar
-  - auto-update displayed stat block based on active creature in the encounter
-- ~~An option to build an encounter in a Note and send it to Initiative Tracker on demand (e.g., in an Obsidian Note, create some code block indicating 3 Goblins and 1 Bugbear in an area; press a button, add the 3 Goblins and Bugbear to the Initiative tracker)~~
+- Wikilink conditions
+- Add a setting to point to a conditions file
 
 # Installation
 
