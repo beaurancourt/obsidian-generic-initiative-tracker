@@ -10,7 +10,6 @@ import {
 
 import type InitiativeTracker from "./main";
 
-import { FileSuggestionModal } from "./utils/suggester";
 import { AC, DEFAULT_UNDEFINED, EDIT, HP, INITIATIVE } from "./utils";
 import type { HomebrewCreature, InputValidate } from "@types";
 
