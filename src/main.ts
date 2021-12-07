@@ -87,11 +87,12 @@ export default class InitiativeTracker extends Plugin {
             if (!this.view) {
               await this.addTrackerView();
             }
-            if (this.view) {
-              this.view?.newEncounter({
+            const view = this.view;
+            if (view) {
+              view.newEncounter({
                 creatures,
               });
-              this.app.workspace.revealLeaf(this.view.leaf);
+              this.app.workspace.revealLeaf(view.leaf);
             } else {
               new Notice(
                 "Could not find the Initiative Tracker. Try reloading the note!"
@@ -221,12 +222,13 @@ export default class InitiativeTracker extends Plugin {
           if (!this.view) {
             await this.addTrackerView();
           }
-          if (this.view) {
-            this.view?.newEncounter({
+          const view = this.view;
+          if (view) {
+            view.newEncounter({
               ...params,
               creatures: creatures,
             });
-            this.app.workspace.revealLeaf(this.view.leaf);
+            this.app.workspace.revealLeaf(view.leaf);
           } else {
             new Notice(
               "Could not find the Initiative Tracker. Try reloading the note!"
@@ -261,9 +263,10 @@ export default class InitiativeTracker extends Plugin {
       id: "toggle-encounter",
       name: "Toggle Encounter",
       checkCallback: (checking) => {
-        if (this.view) {
+        const view = this.view;
+        if (view) {
           if (!checking) {
-            this.view.toggleState();
+            view.toggleState();
           }
           return true;
         }
@@ -274,9 +277,10 @@ export default class InitiativeTracker extends Plugin {
       id: "next-combatant",
       name: "Next Combatant",
       checkCallback: (checking) => {
-        if (this.view && this.view.state) {
+        const view = this.view;
+        if (view && view.state) {
           if (!checking) {
-            this.view.goToNext();
+            view.goToNext();
           }
           return true;
         }
@@ -287,7 +291,8 @@ export default class InitiativeTracker extends Plugin {
       id: "prev-combatant",
       name: "Previous Combatant",
       checkCallback: (checking) => {
-        if (this.view && this.view.state) {
+        const view = this.view;
+        if (view && view.state) {
           if (!checking) {
             this.view.goToPrevious();
           }
@@ -329,8 +334,9 @@ export default class InitiativeTracker extends Plugin {
     this.playerCreatures.set(player, creature);
     this.playerCreatures.delete(existing);
 
-    if (this.view) {
-      this.view.updateState();
+    const view = this.view;
+    if (view) {
+      view.updateState();
     }
 
     await this.saveSettings();
