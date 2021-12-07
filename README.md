@@ -22,21 +22,32 @@ system agnostic.
 
 ## Creating Encounters in Notes
 
-Encounters can be created and launched directly from notes as of `1.0.0` using the "encounter" code block, like so:
+Encounters can be created and launched directly from notes using the "encounter" code block, like so:
 
 ````
 ```encounter
-name: Example
 creatures:
- - 3: Goblin, 0, 0, 0
+- 2: Fighter 1, 13, 11, 550120
+- 2: Fighter 2, 13, 10, 575120
 ```
 ````
 
 This will render like this in Preview:
 
-<img src="https://raw.githubusercontent.com/valentine195/obsidian-initiative-tracker/master/assets/encounter.PNG">
+![image](https://user-images.githubusercontent.com/1045160/145105220-4f920d03-c84a-4edd-984c-f139988d16e7.png)
 
-Clicking on the button next to the encounter name will then launch the encounter in the Initiative Tracker.
+(gruvbox theme)
+
+Clicking on the button next to the encounter name will then launch the encounter in the Initiative Tracker. The names attempt to wikilink as though you had surrounded them with `[[{name}]]`.
+
+With players configured, that looks like:
+
+![image](https://user-images.githubusercontent.com/1045160/145105397-546a7304-3c7f-4ffd-b74a-964381ebf0b5.png).
+
+On hover, you get both a preview of the internal note and also an initative summary:
+
+![image](https://user-images.githubusercontent.com/1045160/145105854-86c74cc0-6106-4ed5-89cb-aa83a5f2626d.png)
+
 
 ### Parameters
 
