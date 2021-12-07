@@ -84,7 +84,7 @@
         <ul>
           {#each players as player}
             <li>
-              <span>{player}</span>
+              <a data-href="{player}" href="{player}" class="internal-link" target="_blank" rel="noopener">{player}</a>
             </li>
           {/each}
         </ul>
