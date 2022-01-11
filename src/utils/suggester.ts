@@ -372,9 +372,14 @@ export class ConditionSuggestionModal extends SuggestionModal<Condition> {
   condition: Condition;
   constructor(public plugin: InitiativeTracker, inputEl: HTMLInputElement) {
     super(plugin.app, inputEl);
+    this.loadConditions(plugin.app);
     this.items = Conditions;
     this.suggestEl.style.removeProperty("min-width");
     this.onInputChanged();
+  }
+  loadConditions(app) {
+    console.log(app.vault);
+    console.log(app.fileManager);
   }
   getItemText(item: Condition) {
     return item.name;

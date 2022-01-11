@@ -134,7 +134,13 @@ export class Creature {
 
     creature.hp = state.currentHP;
     creature.status = new Set(
-      state.status.map((n) => Conditions.find(({ name }) => n == name))
+      state.status.map((n) => {
+        const condition = Conditions.find(({ name }) => n == name);
+        if (condition) {
+          return condition;
+        }
+        return { name: n, description: [] };
+      })
     );
     return creature;
   }
