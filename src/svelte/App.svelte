@@ -21,7 +21,6 @@
     export let name: string = null;
     export let state: boolean;
     export let current: number;
-    export let map: boolean;
 
     let view: TrackerView;
     store.view.subscribe((v) => (view = v));
@@ -73,7 +72,6 @@
         soFar[creature.name] = [...seen, creature]
         return soFar
       }, {} as Record<string, Creature[]>)
-      console.log(creatureNameMap)
       for (let [name, creaturesPerName] of Object.entries(creatureNameMap)) {
         if (creaturesPerName.length > 1) {
           for (let i = 0; i <= creaturesPerName.length - 1; i++) {
@@ -81,7 +79,6 @@
           }
         }
       }
-      console.log(creatureNameMap)
       return creatures
     }
 
@@ -91,7 +88,7 @@
 </script>
 
 <div class="obsidian-initiative-tracker">
-    <Controls {state} {map} />
+    <Controls {state} />
     {#if name && name.length}
         <div class="initiative-tracker-name-container">
             <h2 class="initiative-tracker-name">{name}</h2>
@@ -115,7 +112,7 @@
             <!-- svelte-ignore a11y-autofocus -->
             <input
                 type="number"
-                on:blur={function (evt) {
+                on:blur={function (_) {
                     updateHP(Number(this.value));
                 }}
                 on:keydown={function (evt) {
@@ -147,10 +144,10 @@
             <!-- svelte-ignore a11y-autofocus -->
             <input
                 type="text"
-                on:focus={function (evt) {
+                on:focus={function (_) {
                     suggestConditions(this);
                 }}
-                on:blur={function (evt) {
+                on:blur={function (_) {
                     if (!this.value.length) {
                         updatingStatus = null;
                         return;

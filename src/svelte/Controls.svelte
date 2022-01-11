@@ -6,7 +6,6 @@
         BACKWARD,
         DICE,
         FORWARD,
-        MAP,
         NEW,
         PLAY,
         REDO,
@@ -16,7 +15,6 @@
     import type TrackerView from "src/view";
 
     export let state: boolean = false;
-    export let map: boolean = false;
 
     let view: TrackerView;
     store.view.subscribe((value) => {
@@ -35,8 +33,7 @@
     const stopButton = (node: HTMLElement) => {
         new ExtraButtonComponent(node)
             .setIcon(STOP)
-            .setTooltip("Stop") /*
-            .setDisabled(numberOfCreatures == 0) */
+            .setTooltip("Stop")
             .onClick(() => {
                 view.toggleState();
                 state = view.state;
@@ -84,15 +81,6 @@
                 view.rollInitiatives();
             });
     };
-
-    const mapButton = (node: HTMLElement) => {
-        new ExtraButtonComponent(node)
-            .setIcon(MAP)
-            .setTooltip("Open Leaflet Map")
-            .onClick(() => {
-                view.openInitiativeView();
-            });
-    };
 </script>
 
 <div class="buttons">
@@ -109,9 +97,6 @@
         <div use:diceButton />
         <div use:restoreButton />
         <div use:newButton />
-        {#if map}
-            <div use:mapButton />
-        {/if}
     </div>
 </div>
 
