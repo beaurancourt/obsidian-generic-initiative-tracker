@@ -48,7 +48,6 @@ On hover, you get both a preview of the internal note and also an initative summ
 
 ![image](https://user-images.githubusercontent.com/1045160/145105854-86c74cc0-6106-4ed5-89cb-aa83a5f2626d.png)
 
-
 ### Parameters
 
 There are 3 parameters for each encounter, with more detail below.
@@ -178,12 +177,19 @@ It defaults to `1d20 + %mod%`.
 
 This will support any dice formula supported by the Dice Roller plugin.
 
+# Custom Conditions
+
+The initiative plugin will dynamically populate conditions from notes tagged
+`#condition`. I'm still working on rendering the description text to look
+better, but it's functional for now.
+
 # Roadmap
 
 This is a list of features that are planned for the plugin. Some of these may or may not be developed.
 
 - Wikilink conditions
-- Add a setting to point to a conditions file
+- Add a setting to point to a conditions tag
+- Make the rendering for the conditions hover-over look better
 
 # Installation
 
