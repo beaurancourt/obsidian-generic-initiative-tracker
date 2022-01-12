@@ -279,7 +279,6 @@
                 {status}
                 on:remove={() => {
                     view.removeStatus(creature, status);
-                    /* statuses = Array.from(creature.status); */
                 }}
             />
         {/each}

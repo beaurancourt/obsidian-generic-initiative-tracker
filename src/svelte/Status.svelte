@@ -4,6 +4,7 @@
     const dispatch = createEventDispatcher();
 
     import type { Condition } from "@types";
+    import {MarkdownRenderer} from "obsidian";
 
     export let status: Condition;
 
@@ -18,13 +19,7 @@
 </script>
 
 <!-- svelte-ignore a11y-unknown-aria-attribute -->
-<div
-    class="tag"
-    aria-label={status.description.length
-        ? status.description.join("\n\n")
-        : null}
-    aria-label-classes="initiative-tracker-condition-tooltip"
->
+<div class="tag" aria-label={status.description} aria-label-classes="initiative-tracker-condition-tooltip" >
     <span>{status.name}</span>
     <div use:deleteIcon />
 </div>

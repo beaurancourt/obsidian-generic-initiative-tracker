@@ -17,7 +17,6 @@
 
     async function getInitiativeValue(modifier: number = 0): Promise<number> {
       let initiative = Math.floor(Math.random() * 19 + 1) + modifier;
-      console.log(view.plugin)
       if (view.plugin.canUseDiceRoller) {
         const num = await view.plugin.app.plugins.plugins[
         "obsidian-dice-roller"

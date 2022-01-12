@@ -8,8 +8,6 @@ import {
 } from "obsidian";
 import { createPopper, Instance as PopperInstance } from "@popperjs/core";
 
-import { Conditions } from "./conditions";
-
 import type { HomebrewCreature, Condition } from "@types";
 import type InitiativeTracker from "src/main";
 
@@ -372,14 +370,25 @@ export class ConditionSuggestionModal extends SuggestionModal<Condition> {
   condition: Condition;
   constructor(public plugin: InitiativeTracker, inputEl: HTMLInputElement) {
     super(plugin.app, inputEl);
-    this.loadConditions(plugin.app);
-    this.items = Conditions;
+
+    const cache = plugin.app.metadataCache;
+    const fileNames = cache.getCachedFiles();
+    const conditions = fileNames.filter((fileName) =>
+      (cache.getCache(fileName).tags || []).some(
+        (tag) => tag.tag == "#condition"
+      )
+    );
+    this.items = conditions.map((condition) => {
+      const link = cache.getFirstLinkpathDest(condition, condition);
+      return {
+        name: link.basename,
+        description: link.unsafeCachedData,
+        path: link.path,
+      };
+    });
+
     this.suggestEl.style.removeProperty("min-width");
     this.onInputChanged();
-  }
-  loadConditions(app) {
-    console.log(app.vault);
-    console.log(app.fileManager);
   }
   getItemText(item: Condition) {
     return item.name;
@@ -412,9 +421,7 @@ export class ConditionSuggestionModal extends SuggestionModal<Condition> {
   }
   renderSuggestion(result: FuzzyMatch<Condition>, el: HTMLElement) {
     let { item, match: matches } = result || {};
-    let content = new Setting(el); /* el.createDiv({
-            cls: "suggestion-content"
-        }); */
+    let content = new Setting(el);
     if (!item) {
       content.nameEl.setText(this.emptyStateText);
       this.condition = null;
@@ -424,6 +431,7 @@ export class ConditionSuggestionModal extends SuggestionModal<Condition> {
     const matchElements = matches.matches.map((_) => {
       return createSpan("suggestion-highlight");
     });
+
     for (let i = 0; i < item.name.length; i++) {
       let match = matches.matches.find((m) => m[0] === i);
       if (match) {

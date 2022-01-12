@@ -55,7 +55,8 @@ export interface TrackerViewState {
 
 export interface Condition {
   name: string;
-  description: string[];
+  description: string;
+  path: string;
 }
 
 export interface InputValidate {
