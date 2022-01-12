@@ -85,7 +85,7 @@ export interface InitiativeViewState {
 }
 
 export interface CreatureState extends HomebrewCreature {
-  status: string[];
+  status: Condition[];
   enabled: boolean;
   currentHP: number;
   initiative: number;

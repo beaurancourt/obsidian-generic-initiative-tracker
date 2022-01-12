@@ -4,7 +4,6 @@ import type {
   HomebrewCreature,
   SRDMonster,
 } from "@types";
-import { Conditions } from ".";
 import { DEFAULT_UNDEFINED } from "./constants";
 
 function getId() {
@@ -122,7 +121,7 @@ export class Creature {
       id: this.id,
       marker: this.marker,
       currentHP: this.hp,
-      status: Array.from(this.status).map((c) => c.name),
+      status: Array.from(this.status),
       enabled: this.enabled,
       player: this.player,
     };
@@ -133,15 +132,7 @@ export class Creature {
     creature.enabled = state.enabled;
 
     creature.hp = state.currentHP;
-    creature.status = new Set(
-      state.status.map((n) => {
-        const condition = Conditions.find(({ name }) => n == name);
-        if (condition) {
-          return condition;
-        }
-        return { name: n, description: [] };
-      })
-    );
+    creature.status = new Set(state.status);
     return creature;
   }
 }
