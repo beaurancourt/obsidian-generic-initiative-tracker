@@ -78,44 +78,13 @@ export default class InitiativeTracker extends Plugin {
         async () => await this.saveSettings()
       )
     );
-    this.registerEvent(
-      this.app.workspace.on(
-        "initiative-tracker:start-encounter",
-        async (homebrews: HomebrewCreature[]) => {
-          try {
-            const creatures = homebrews.map((h) => Creature.from(h));
-            if (!this.view) {
-              await this.addTrackerView();
-            }
-            const view = this.view;
-            if (view) {
-              view.newEncounter({
-                creatures,
-              });
-              this.app.workspace.revealLeaf(view.leaf);
-            } else {
-              new Notice(
-                "Could not find the Initiative Tracker. Try reloading the note!"
-              );
-            }
-          } catch (e) {
-            new Notice(
-              "There was an issue launching the encounter.\n\n" + e.message
-            );
-            console.error(e);
-            return;
-          }
-        }
-      )
-    );
-
     this.registerMarkdownCodeBlockProcessor(
       "encounter",
       this.encounterProcessor.bind(this)
     );
 
     this.playerCreatures = new Map(
-      this.data.players.map((p) => [p, Creature.from(p)])
+      this.data.players.map((p) => [p, new Creature(p)])
     );
 
     this.app.workspace.onLayoutReady(() => this.addTrackerView());
@@ -183,8 +152,8 @@ export default class InitiativeTracker extends Plugin {
                 });
 
                 return [
-                  ...[...Array(number).keys()].map((_) =>
-                    Creature.from(creature)
+                  ...[...Array(number).keys()].map(
+                    (_) => new Creature(creature)
                   ),
                 ];
               } catch (e) {
@@ -343,13 +312,13 @@ export default class InitiativeTracker extends Plugin {
 
   async savePlayer(player: HomebrewCreature) {
     this.data.players.push(player);
-    this.playerCreatures.set(player, Creature.from(player));
+    this.playerCreatures.set(player, new Creature(player));
     await this.saveSettings();
   }
   async savePlayers(...players: HomebrewCreature[]) {
-    for (let monster of players) {
-      this.data.players.push(monster);
-      this.playerCreatures.set(monster, Creature.from(monster));
+    for (let player of players) {
+      this.data.players.push(player);
+      this.playerCreatures.set(player, new Creature(player));
     }
     await this.saveSettings();
   }

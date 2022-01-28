@@ -1,9 +1,4 @@
-import type {
-  Condition,
-  CreatureState,
-  HomebrewCreature,
-  SRDMonster,
-} from "@types";
+import type { Condition, CreatureState, HomebrewCreature } from "@types";
 import { DEFAULT_UNDEFINED } from "./constants";
 
 function getId() {
@@ -68,26 +63,6 @@ export class Creature {
     yield this.note;
     yield this.id;
     yield this.marker;
-  }
-
-  static from(creature: HomebrewCreature | SRDMonster) {
-    const modifier =
-      "modifier" in creature
-        ? creature.modifier
-        : Math.floor(
-            (("stats" in creature && creature.stats.length > 1
-              ? creature.stats[1]
-              : 10) -
-              10) /
-              2
-          );
-    return new Creature(
-      {
-        ...creature,
-        modifier: modifier,
-      },
-      0
-    );
   }
 
   update(creature: HomebrewCreature) {
