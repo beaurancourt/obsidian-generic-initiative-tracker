@@ -18,6 +18,7 @@ system agnostic.
 - Massively simplified the settings screen
 - Made the encounter renderer use internal links
 - Give multiple creatures with the same name a unique index
+- Initiative modifiers support dice strings (like 2d6)
 - Misc bugfixes
 
 ## Creating Encounters in Notes
@@ -114,6 +115,7 @@ creatures:
   - 2: Goblin, 7, 15, 2                 # 2 goblins with HP: 7, AC: 15, MOD: 2 will be added.
   - Goblin, 6, 15, 2                    # 1 goblin with HP: 6, AC: 15, MOD: 2 will be added.
   - Goblin, 9, 15, 2                    # 1 goblin with HP: 9, AC: 15, MOD: 2 will be added.
+  - Hobgoblin, 20, 19, 2d+3             # 1 Hobgoblin with HP: 20, AC: 19: MOD: 2d+3 (rerolls each time) will be added
 ```
 ````
 
@@ -185,7 +187,6 @@ better, but it's functional for now.
 
 ![image](https://user-images.githubusercontent.com/1045160/149223266-25afdf23-85b6-4616-9399-3986ab63bf7f.png)
 ![image](https://user-images.githubusercontent.com/1045160/149223344-107a3d00-647d-4ce3-a965-7f0bc8fdc293.png)
-
 
 # Roadmap
 
