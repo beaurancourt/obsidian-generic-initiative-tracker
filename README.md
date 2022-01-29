@@ -183,6 +183,10 @@ The initiative plugin will dynamically populate conditions from notes tagged
 `#condition`. I'm still working on rendering the description text to look
 better, but it's functional for now.
 
+![image](https://user-images.githubusercontent.com/1045160/149223266-25afdf23-85b6-4616-9399-3986ab63bf7f.png)
+![image](https://user-images.githubusercontent.com/1045160/149223344-107a3d00-647d-4ce3-a965-7f0bc8fdc293.png)
+
+
 # Roadmap
 
 This is a list of features that are planned for the plugin. Some of these may or may not be developed.
