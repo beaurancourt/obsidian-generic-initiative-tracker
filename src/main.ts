@@ -144,11 +144,7 @@ export default class InitiativeTracker extends Plugin {
                     monster[2] && !isNaN(Number(monster[2]))
                       ? Number(monster[2])
                       : null,
-                  modifier:
-                    monster[3] && !isNaN(Number(monster[3]))
-                      ? Number(monster[3])
-                      : null,
-                  marker: this.data.monsterMarker,
+                  modifier: monster[3],
                 });
 
                 return [

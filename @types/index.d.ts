@@ -99,7 +99,7 @@ export interface HomebrewCreature {
   stats?: number[];
   source?: string;
   cr?: number | string;
-  modifier?: number;
+  modifier?: string;
   note?: string;
   player?: boolean;
   marker?: string;

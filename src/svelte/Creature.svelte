@@ -181,13 +181,11 @@
     <div class="tree-item-flair-outer">
         <input
             class="editable initiative tree-item-flair"
-            aria-label={`${creature.initiative - creature.modifier} + ${
-                creature.modifier
-            }`}
-            on:click={function (evt) {
+            aria-label={`${creature.initiative}`}
+            on:click={function (_) {
                 this.select();
             }}
-            on:blur={function (evt) {
+            on:blur={function (_) {
                 const value = this.value;
                 if (isNaN(Number(value)) || Number(value) < 1) {
                     new Notice("Enter a valid initiative.");

@@ -306,18 +306,13 @@ class NewPlayerModal extends Modal {
       .addText((t) => {
         modInput = {
           input: t.inputEl,
-          validate: (i) => {
-            let error = false;
-            if (isNaN(Number(i.value))) {
-              t.inputEl.addClass("has-error");
-              error = true;
-            }
-            return error;
+          validate: (_) => {
+            return false;
           },
         };
         t.setValue(`${this.player.modifier ?? ""}`);
         t.onChange((v) => {
-          this.player.modifier = Number(v);
+          this.player.modifier = v;
         });
       });
 

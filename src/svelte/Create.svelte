@@ -15,8 +15,7 @@
     store.view.subscribe((v) => (view = v));
 
 
-    async function getInitiativeValue(modifier: number = 0): Promise<number> {
-      let initiative = Math.floor(Math.random() * 19 + 1) + modifier;
+    async function getInitiativeValue(modifier: string = ""): Promise<number> {
       if (view.plugin.canUseDiceRoller) {
         const num = await view.plugin.app.plugins.plugins[
         "obsidian-dice-roller"
@@ -24,16 +23,16 @@
           view.plugin.data.initiative.replace(/%mod%/g, `(${modifier})`)
         );
 
-        initiative = num.result;
+        return num.result;
       }
-      return initiative;
+      return Math.floor(Math.random() * 19 + 1);
     }
 
     let name: string;
     let hp: string;
     let initiative: number;
     let ac: string;
-    let modifier: number;
+    let modifier: string;
     let player: boolean;
 
     const saveButton = (node: HTMLElement) => {
@@ -46,7 +45,7 @@
                     return;
                 }
                 if (!modifier) {
-                    modifier = 0;
+                    modifier = "";
                 }
 
                 if (!initiative) {
@@ -85,7 +84,7 @@
             .setIcon(DICE)
             .setTooltip("Roll Initiative")
             .onClick(() => {
-                getInitiativeValue((modifier ?? 0)).then(init => {
+                getInitiativeValue((modifier ?? "")).then(init => {
                   initiative = init
                 })
             });
@@ -128,8 +127,8 @@
         <input
             bind:value={modifier}
             id="add-mod"
-            type="number"
-            name="ac"
+            type="text"
+            name="modifier"
             tabindex="0"
         />
     </div>

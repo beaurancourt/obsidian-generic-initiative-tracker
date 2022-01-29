@@ -11,7 +11,7 @@ function getId() {
 
 export class Creature {
   name: string;
-  modifier: number;
+  modifier: string;
   hp: number;
   ac: number;
   note: string;
@@ -25,8 +25,8 @@ export class Creature {
   id: string;
   constructor(creature: HomebrewCreature, initiative: number = 0) {
     this.name = creature.name;
-    this.modifier = Number(creature.modifier ?? 0);
-    this._initiative = Number(initiative ?? 0) - this.modifier;
+    this.modifier = creature.modifier ?? "";
+    this._initiative = Number(initiative ?? 0);
 
     this.max = creature.hp ? Number(creature.hp) : undefined;
     this.ac = creature.ac ? Number(creature.ac) : undefined;
@@ -48,10 +48,10 @@ export class Creature {
   }
 
   get initiative() {
-    return this._initiative + this.modifier;
+    return this._initiative;
   }
   set initiative(x: number) {
-    this._initiative = Number(x) - this.modifier;
+    this._initiative = Number(x);
   }
 
   *[Symbol.iterator]() {
@@ -67,7 +67,7 @@ export class Creature {
 
   update(creature: HomebrewCreature) {
     this.name = creature.name;
-    this.modifier = Number(creature.modifier ?? 0);
+    this.modifier = creature.modifier ?? "";
 
     this.max = creature.hp ? Number(creature.hp) : undefined;
 
@@ -88,7 +88,7 @@ export class Creature {
   toJSON(): CreatureState {
     return {
       name: this.name,
-      initiative: this.initiative - this.modifier,
+      initiative: this.initiative,
       modifier: this.modifier,
       hp: this.max,
       ac: this.ac,
