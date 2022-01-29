@@ -333,25 +333,9 @@ export default class InitiativeTracker extends Plugin {
     );
 
     this.data = data;
-    if (
-      this.data.leafletIntegration &&
-      !this.data.players.every((p) => p.marker)
-    ) {
-      this.data.players = this.data.players.map((p) => {
-        p.marker = p.marker ?? this.data.playerMarker;
-        return p;
-      });
-    }
   }
 
   async saveSettings() {
-    if (!this.data.players.every((p) => p.marker)) {
-      this.data.players = this.data.players.map((p) => {
-        p.marker = p.marker ?? this.data.playerMarker;
-        return p;
-      });
-    }
-
     await this.saveData(this.data);
   }
 }

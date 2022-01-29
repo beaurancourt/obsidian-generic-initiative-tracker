@@ -71,9 +71,6 @@ export interface InitiativeTrackerData {
   canUseDiceRoll: boolean;
   initiative: string;
   sync: boolean;
-  leafletIntegration: boolean;
-  playerMarker: string;
-  monsterMarker: string;
   state: InitiativeViewState;
 }
 
@@ -102,7 +99,6 @@ export interface HomebrewCreature {
   modifier?: string;
   note?: string;
   player?: boolean;
-  marker?: string;
   id?: string;
 }
 

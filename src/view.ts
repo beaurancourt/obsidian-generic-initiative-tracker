@@ -395,13 +395,11 @@ export default class TrackerView extends ItemView {
       ac,
       initiative,
       name,
-      marker,
     }: {
       hp?: number;
       ac?: number;
       initiative?: number;
       name?: string;
-      marker?: string;
     }
   ) {
     if (initiative) {
@@ -415,9 +413,6 @@ export default class TrackerView extends ItemView {
     }
     if (ac) {
       creature.ac = ac;
-    }
-    if (marker) {
-      creature.marker = marker;
     }
 
     this.trigger("initiative-tracker:creature-updated", creature);

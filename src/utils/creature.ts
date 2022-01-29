@@ -19,7 +19,6 @@ export class Creature {
   max: number;
   player: boolean;
   status: Set<Condition> = new Set();
-  marker: string;
   private _initiative: number;
   source: string;
   id: string;
@@ -32,8 +31,6 @@ export class Creature {
     this.ac = creature.ac ? Number(creature.ac) : undefined;
     this.note = creature.note;
     this.player = creature.player;
-
-    this.marker = creature.marker;
 
     this.hp = this.max;
     this.source = creature.source;
@@ -62,7 +59,6 @@ export class Creature {
     yield this.ac;
     yield this.note;
     yield this.id;
-    yield this.marker;
   }
 
   update(creature: HomebrewCreature) {
@@ -77,7 +73,6 @@ export class Creature {
     this.note = creature.note;
     this.player = creature.player;
 
-    this.marker = creature.marker;
     this.source = creature.source;
   }
 
@@ -94,7 +89,6 @@ export class Creature {
       ac: this.ac,
       note: this.note,
       id: this.id,
-      marker: this.marker,
       currentHP: this.hp,
       status: Array.from(this.status),
       enabled: this.enabled,

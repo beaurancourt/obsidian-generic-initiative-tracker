@@ -192,7 +192,6 @@
                                 hp: creature.hp,
                                 ac: creature.ac,
                                 modifier: creature.modifier,
-                                marker: view.plugin.data.monsterMarker,
                                 player: creature.player,
                             },
                             creature.initiative
